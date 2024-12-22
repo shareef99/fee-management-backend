@@ -1,11 +1,7 @@
-import { Hono } from "hono";
 import "@std/dotenv/load";
 import "./env.ts";
+import app from "./app.ts";
 
-const app = new Hono();
-
-app.get("/", (c) => c.text("Hello Master Shareef!"));
-
-console.log(Deno.env.get("PORT"));
+app.get("/", (c) => c.text("Hello Master Shareef!!!"));
 
 Deno.serve({ port: 5000 }, app.fetch);
