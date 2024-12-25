@@ -1,0 +1,20 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{URL}}/organizations
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Bright Academy",
+    "email": "bright@academy.com",
+    "address": "Bandlaguda, Chandrangutta, Hyderabad",
+    "mobile": "7815837566"
+  }
+}

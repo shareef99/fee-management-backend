@@ -2,10 +2,11 @@
   "version": "4",
   "specifiers": {
     "jsr:@std/dotenv@~0.225.3": "0.225.3",
+    "npm:@hono/zod-validator@~0.4.2": "0.4.2_hono@4.6.14_zod@3.24.1",
     "npm:@types/pg@^8.11.10": "8.11.10",
-    "npm:drizzle-kit@*": "0.30.1_esbuild@0.19.12",
     "npm:drizzle-kit@~0.30.1": "0.30.1_esbuild@0.19.12",
-    "npm:drizzle-orm@~0.38.2": "0.38.2_pg@8.13.1",
+    "npm:drizzle-orm@~0.38.2": "0.38.3_@types+pg@8.11.10_pg@8.13.1",
+    "npm:drizzle-zod@~0.6.1": "0.6.1_drizzle-orm@0.38.3__@types+pg@8.11.10__pg@8.13.1_zod@3.24.1_@types+pg@8.11.10_pg@8.13.1",
     "npm:hono@^4.6.14": "4.6.14",
     "npm:pg@^8.13.1": "8.13.1",
     "npm:zod@^3.24.1": "3.24.1"
@@ -168,6 +169,13 @@
     "@esbuild/win32-x64@0.19.12": {
       "integrity": "sha512-T1QyPSDCyMXaO3pzBkF96E8xMkiRYbUEZADd29SyPGabqxMViNoii+NcK7eWJAEoU6RZyEm5lVSIjTmcdoB9HA=="
     },
+    "@hono/zod-validator@0.4.2_hono@4.6.14_zod@3.24.1": {
+      "integrity": "sha512-1rrlBg+EpDPhzOV4hT9pxr5+xDVmKuz6YJl+la7VCwK6ass5ldyKm5fD+umJdV2zhHD6jROoCCv8NbTwyfhT0g==",
+      "dependencies": [
+        "hono",
+        "zod"
+      ]
+    },
     "@types/node@22.5.4": {
       "integrity": "sha512-FDuKUJQm/ju9fT/SeX/6+gBzoPzlVCzfzmGkwKvRHQVxi4BntVbyIwf6a4Xn62mrvndLiml6z/UBXIdEVjQLXg==",
       "dependencies": [
@@ -200,10 +208,18 @@
         "esbuild-register"
       ]
     },
-    "drizzle-orm@0.38.2_pg@8.13.1": {
-      "integrity": "sha512-eCE3yPRAskLo1WpM9OHpFaM70tBEDsWhwR/0M3CKyztAXKR9Qs3asZlcJOEliIcUSg8GuwrlY0dmYDgmm6y5GQ==",
+    "drizzle-orm@0.38.3_@types+pg@8.11.10_pg@8.13.1": {
+      "integrity": "sha512-w41Y+PquMpSff/QDRGdItG0/aWca+/J3Sda9PPGkTxBtjWQvgU1jxlFBXdjog5tYvTu58uvi3PwR1NuCx0KeZg==",
       "dependencies": [
+        "@types/pg",
         "pg"
+      ]
+    },
+    "drizzle-zod@0.6.1_drizzle-orm@0.38.3__@types+pg@8.11.10__pg@8.13.1_zod@3.24.1_@types+pg@8.11.10_pg@8.13.1": {
+      "integrity": "sha512-huEbUgnsuR8tupnmLiyB2F1I2H9dswI3GfM36IbIqx9i0YUeYjRsDpJVyFVeziUvI1ogT9JHRL2Q03cC4QmvxA==",
+      "dependencies": [
+        "drizzle-orm",
+        "zod"
       ]
     },
     "esbuild-register@3.6.0_esbuild@0.19.12": {
@@ -405,9 +421,11 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/dotenv@~0.225.3",
+      "npm:@hono/zod-validator@~0.4.2",
       "npm:@types/pg@^8.11.10",
       "npm:drizzle-kit@~0.30.1",
       "npm:drizzle-orm@~0.38.2",
+      "npm:drizzle-zod@~0.6.1",
       "npm:hono@^4.6.14",
       "npm:pg@^8.13.1",
       "npm:zod@^3.24.1"

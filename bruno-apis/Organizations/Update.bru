@@ -1,0 +1,17 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{URL}}/organizations/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "mobile": "123456987"
+  }
+}

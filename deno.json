@@ -1,16 +1,22 @@
 {
   "tasks": {
     "dev": "deno run --watch --allow-net --allow-read --allow-env ./src/main.ts",
+    "clean": "deno cache --reload ./src/main.ts",
     "migration:generate": "deno --env -A --node-modules-dir npm:drizzle-kit generate",
     "migration:run": "deno --env -A --node-modules-dir npm:drizzle-kit migrate"
   },
   "imports": {
+    "@hono/zod-validator": "npm:@hono/zod-validator@^0.4.2",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.3",
     "@types/pg": "npm:@types/pg@^8.11.10",
     "drizzle-kit": "npm:drizzle-kit@^0.30.1",
     "drizzle-orm": "npm:drizzle-orm@^0.38.2",
+    "drizzle-zod": "npm:drizzle-zod@^0.6.1",
     "hono": "npm:hono@^4.6.14",
     "pg": "npm:pg@^8.13.1",
     "zod": "npm:zod@^3.24.1"
+  },
+  "compilerOptions": {
+    "strict": true
   }
 }
