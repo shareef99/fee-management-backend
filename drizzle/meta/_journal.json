@@ -36,6 +36,13 @@
       "when": 1735243001853,
       "tag": "0004_long_sleeper",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1735243866698,
+      "tag": "0005_daily_spectrum",
+      "breakpoints": true
     }
   ]
 }

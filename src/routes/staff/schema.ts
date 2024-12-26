@@ -1,4 +1,10 @@
-import { serial, pgTable, integer, varchar } from "drizzle-orm/pg-core";
+import {
+  serial,
+  pgTable,
+  integer,
+  varchar,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { organizations } from "../organization/schema.ts";
 import { staffRoles } from "../../types/enums.ts";
 import { relations } from "drizzle-orm/relations";
@@ -13,6 +19,8 @@ export const staff = pgTable("staff", {
   role: varchar("role", { enum: staffRoles }).notNull(),
   mobile: varchar("mobile", { length: 15 }).notNull(),
   password: varchar("password").notNull(),
+  updated_at: timestamp().$onUpdate(() => new Date()),
+  created_at: timestamp().defaultNow().notNull(),
 });
 
 export const staffRelations = relations(staff, ({ one }) => ({

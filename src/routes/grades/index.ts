@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import app from "../../app.ts";
 import { db } from "../../db/index.ts";
 import { authMiddleware } from "../../middlewares/auth.ts";
-import { createParentSchema, updateParentSchema } from "./validator.ts";
+import { createGradeSchema, updateGradeSchema } from "./validator.ts";
 import { grades } from "./schema.ts";
 import { eq } from "drizzle-orm/expressions";
 import { validateParamsId } from "../../middlewares/validators.ts";
@@ -19,7 +19,7 @@ gradesRouter.get("/", authMiddleware, async (c) => {
 gradesRouter.post(
   "/",
   authMiddleware,
-  zValidator("json", createParentSchema),
+  zValidator("json", createGradeSchema),
   async (c) => {
     const payload = c.req.valid("json");
 
@@ -33,7 +33,7 @@ gradesRouter.put(
   "/:id",
   authMiddleware,
   validateParamsId,
-  zValidator("json", updateParentSchema),
+  zValidator("json", updateGradeSchema),
   async (c) => {
     const { id } = c.req.valid("param");
     const payload = c.req.valid("json");
