@@ -7,6 +7,7 @@ import {
 } from "../routes/organization/schema.ts";
 import { staff, staffRelations } from "../routes/staff/schema.ts";
 import { parents, parentsRelations } from "../routes/parents/schema.ts";
+import { grades } from "../routes/grades/schema.ts";
 
 export const db = drizzle({
   connection: env.DATABASE_URL,
@@ -18,5 +19,6 @@ export const db = drizzle({
     staffRelations,
     parents,
     parentsRelations,
+    grades,
   },
 });
