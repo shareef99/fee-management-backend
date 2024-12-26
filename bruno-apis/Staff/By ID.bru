@@ -1,0 +1,17 @@
+meta {
+  name: By ID
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{URL}}/staff/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "organization_id": 1
+  }
+}

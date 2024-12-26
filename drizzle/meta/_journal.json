@@ -15,6 +15,13 @@
       "when": 1734885080645,
       "tag": "0001_tan_ben_grimm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735156344486,
+      "tag": "0002_silent_triathlon",
+      "breakpoints": true
     }
   ]
 }

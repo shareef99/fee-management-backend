@@ -6,6 +6,9 @@ const EnvSchema = z.object({
     .default("development"),
   PORT: z.coerce.number().default(5000),
   DATABASE_URL: z.string(),
+  SECRET_KEY: z.string(),
+  REFRESH_SECRET_KEY: z.string(),
+  TOKEN_EXPIRATION_MINUTES: z.coerce.number().default(60),
 });
 type Env = z.infer<typeof EnvSchema>;
 

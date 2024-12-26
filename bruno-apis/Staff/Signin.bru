@@ -1,0 +1,18 @@
+meta {
+  name: Signin
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{URL}}/staff/signin
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@bright.academy.com",
+    "password": "123456789"
+  }
+}
