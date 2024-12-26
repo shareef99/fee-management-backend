@@ -1,6 +1,7 @@
 import { serial, pgTable, integer, varchar } from "drizzle-orm/pg-core";
 import { organizations } from "../organization/schema.ts";
 import { staffRoles } from "../../types/enums.ts";
+import { relations } from "drizzle-orm/relations";
 
 export const staff = pgTable("staff", {
   id: serial("id").primaryKey(),
@@ -13,3 +14,10 @@ export const staff = pgTable("staff", {
   mobile: varchar("mobile", { length: 15 }).notNull(),
   password: varchar("password").notNull(),
 });
+
+export const staffRelations = relations(staff, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [staff.organization_id],
+    references: [organizations.id],
+  }),
+}));
