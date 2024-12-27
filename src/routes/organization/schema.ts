@@ -1,9 +1,9 @@
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm/relations";
-import { staff } from "../staff/schema.ts";
-import { parents } from "../parents/schema.ts";
+import { staffTable } from "../staff/schema.ts";
+import { parentsTable } from "../parents/schema.ts";
 
-export const organizations = pgTable("organizations", {
+export const organizationsTable = pgTable("organizations", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).unique().notNull(),
@@ -13,7 +13,10 @@ export const organizations = pgTable("organizations", {
   created_at: timestamp().defaultNow().notNull(),
 });
 
-export const organizationRelations = relations(organizations, ({ many }) => ({
-  staff: many(staff),
-  parents: many(parents),
-}));
+export const organizationRelations = relations(
+  organizationsTable,
+  ({ many }) => ({
+    staff: many(staffTable),
+    parents: many(parentsTable),
+  })
+);

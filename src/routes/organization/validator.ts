@@ -1,7 +1,7 @@
 import { createInsertSchema } from "drizzle-zod";
-import { organizations } from "./schema.ts";
+import { organizationsTable } from "./schema.ts";
 
 export const createOrganizationSchema =
-  createInsertSchema(organizations).strict();
+  createInsertSchema(organizationsTable).strict();
 
 export const updateOrganizationSchema = createOrganizationSchema.partial();

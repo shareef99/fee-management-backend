@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import app from "../../app.ts";
 import { db } from "../../db/index.ts";
 import { eq } from "drizzle-orm";
-import { organizations } from "./schema.ts";
+import { organizationsTable } from "./schema.ts";
 import {
   createOrganizationSchema,
   updateOrganizationSchema,
@@ -19,7 +19,7 @@ organizationRouter.post(
     const payload = c.req.valid("json");
 
     const [organization] = await db
-      .insert(organizations)
+      .insert(organizationsTable)
       .values(payload)
       .returning();
 
@@ -28,7 +28,7 @@ organizationRouter.post(
 );
 
 organizationRouter.get("/", async (c) => {
-  const organizations = await db.query.organizations.findMany();
+  const organizations = await db.query.organizationsTable.findMany();
 
   return c.json({
     organizations,
@@ -37,8 +37,8 @@ organizationRouter.get("/", async (c) => {
 
 organizationRouter.get("/:id", validateParamsId, async (c) => {
   const { id } = c.req.valid("param");
-  const organization = await db.query.organizations.findFirst({
-    where: eq(organizations.id, id),
+  const organization = await db.query.organizationsTable.findFirst({
+    where: eq(organizationsTable.id, id),
   });
 
   if (!organization) {
@@ -61,9 +61,9 @@ organizationRouter.put(
     const payload = c.req.valid("json");
 
     const [organization] = await db
-      .update(organizations)
+      .update(organizationsTable)
       .set(payload)
-      .where(eq(organizations.id, id))
+      .where(eq(organizationsTable.id, id))
       .returning();
 
     return c.json({ organization });

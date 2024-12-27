@@ -1,6 +1,6 @@
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
 
-export const academicYears = pgTable("academic_year", {
+export const academicYearsTable = pgTable("academic_year", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
   start_date: timestamp("start_date").notNull(),

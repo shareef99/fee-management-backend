@@ -3,7 +3,7 @@ import app from "../../app.ts";
 import { db } from "../../db/index.ts";
 import { authMiddleware } from "../../middlewares/auth.ts";
 import { createParentSchema, updateParentSchema } from "./validator.ts";
-import { parents } from "./schema.ts";
+import { parentsTable } from "./schema.ts";
 import { eq } from "drizzle-orm/expressions";
 import { validateParamsId } from "../../middlewares/validators.ts";
 import { HTTPException } from "hono/http-exception";
@@ -11,7 +11,7 @@ import { HTTPException } from "hono/http-exception";
 export const parentsRouter = app.basePath("/parents");
 
 parentsRouter.get("/", authMiddleware, async (c) => {
-  const parents = await db.query.parents.findMany();
+  const parents = await db.query.parentsTable.findMany();
 
   return c.json({ parents });
 });
@@ -23,7 +23,7 @@ parentsRouter.post(
   async (c) => {
     const payload = c.req.valid("json");
 
-    const [parent] = await db.insert(parents).values(payload).returning();
+    const [parent] = await db.insert(parentsTable).values(payload).returning();
 
     return c.json({ parent });
   }
@@ -32,8 +32,8 @@ parentsRouter.post(
 parentsRouter.get("/:id", authMiddleware, validateParamsId, async (c) => {
   const { id } = c.req.valid("param");
 
-  const parent = await db.query.parents.findFirst({
-    where: eq(parents.id, id),
+  const parent = await db.query.parentsTable.findFirst({
+    where: eq(parentsTable.id, id),
   });
 
   if (!parent) {
@@ -54,8 +54,8 @@ parentsRouter.put(
     const { id } = c.req.valid("param");
     const payload = c.req.valid("json");
 
-    const existingParent = await db.query.parents.findFirst({
-      where: eq(parents.id, id),
+    const existingParent = await db.query.parentsTable.findFirst({
+      where: eq(parentsTable.id, id),
     });
 
     if (!existingParent) {
@@ -65,9 +65,9 @@ parentsRouter.put(
     }
 
     const [parent] = await db
-      .update(parents)
+      .update(parentsTable)
       .set(payload)
-      .where(eq(parents.id, id))
+      .where(eq(parentsTable.id, id))
       .returning();
 
     return c.json({ parent });

@@ -1,6 +1,6 @@
 import { createInsertSchema } from "drizzle-zod";
-import { parents } from "./schema.ts";
+import { parentsTable } from "./schema.ts";
 
-export const createParentSchema = createInsertSchema(parents).strict();
+export const createParentSchema = createInsertSchema(parentsTable).strict();
 
 export const updateParentSchema = createParentSchema.partial();

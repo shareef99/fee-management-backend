@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import app from "../../app.ts";
 import { db } from "../../db/index.ts";
 import { authMiddleware } from "../../middlewares/auth.ts";
-import { academicYears } from "./schema.ts";
+import { academicYearsTable } from "./schema.ts";
 import {
   createAcademicYearSchema,
   updateAcademicYearSchema,
@@ -14,7 +14,7 @@ import { HTTPException } from "hono/http-exception";
 export const academicYearRouter = app.basePath("/academic-years");
 
 academicYearRouter.get("/", authMiddleware, async (c) => {
-  const academicYears = await db.query.academicYears.findMany();
+  const academicYears = await db.query.academicYearsTable.findMany();
 
   return c.json({ academic_years: academicYears });
 });
@@ -27,7 +27,7 @@ academicYearRouter.post(
     const payload = c.req.valid("json");
 
     const [academicYear] = await db
-      .insert(academicYears)
+      .insert(academicYearsTable)
       .values(payload)
       .returning();
 
@@ -38,8 +38,8 @@ academicYearRouter.post(
 academicYearRouter.get("/:id", authMiddleware, validateParamsId, async (c) => {
   const { id } = c.req.valid("param");
 
-  const academicYear = await db.query.academicYears.findFirst({
-    where: eq(academicYears.id, id),
+  const academicYear = await db.query.academicYearsTable.findFirst({
+    where: eq(academicYearsTable.id, id),
   });
 
   if (!academicYear) {
@@ -60,8 +60,8 @@ academicYearRouter.put(
     const { id } = c.req.valid("param");
     const payload = c.req.valid("json");
 
-    const existingAcademicYear = await db.query.academicYears.findFirst({
-      where: eq(academicYears.id, id),
+    const existingAcademicYear = await db.query.academicYearsTable.findFirst({
+      where: eq(academicYearsTable.id, id),
     });
 
     if (!existingAcademicYear) {
@@ -71,9 +71,9 @@ academicYearRouter.put(
     }
 
     const [academicYear] = await db
-      .update(academicYears)
+      .update(academicYearsTable)
       .set(payload)
-      .where(eq(academicYears.id, id))
+      .where(eq(academicYearsTable.id, id))
       .returning();
 
     return c.json({ academic_year: academicYear });

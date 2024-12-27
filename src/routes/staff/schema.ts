@@ -5,14 +5,14 @@ import {
   varchar,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { organizations } from "../organization/schema.ts";
+import { organizationsTable } from "../organization/schema.ts";
 import { staffRoles } from "../../types/enums.ts";
 import { relations } from "drizzle-orm/relations";
 
-export const staff = pgTable("staff", {
+export const staffTable = pgTable("staff", {
   id: serial("id").primaryKey(),
   organization_id: integer("organization_id").references(
-    () => organizations.id
+    () => organizationsTable.id
   ),
   name: varchar("name").notNull(),
   email: varchar("email").unique().notNull(),
@@ -23,9 +23,9 @@ export const staff = pgTable("staff", {
   created_at: timestamp().defaultNow().notNull(),
 });
 
-export const staffRelations = relations(staff, ({ one }) => ({
-  organization: one(organizations, {
-    fields: [staff.organization_id],
-    references: [organizations.id],
+export const staffRelations = relations(staffTable, ({ one }) => ({
+  organization: one(organizationsTable, {
+    fields: [staffTable.organization_id],
+    references: [organizationsTable.id],
   }),
 }));

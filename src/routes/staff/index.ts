@@ -7,7 +7,7 @@ import {
   updateStaffSchema,
 } from "./validator.ts";
 import { eq } from "drizzle-orm";
-import { staff } from "./schema.ts";
+import { staffTable } from "./schema.ts";
 import { HTTPException } from "hono/http-exception";
 import { sign } from "hono/jwt";
 import { setSignedCookie } from "hono/cookie";
@@ -20,7 +20,7 @@ import { authMiddleware } from "../../middlewares/auth.ts";
 export const staffRouter = app.basePath("/staff");
 
 staffRouter.get("/", authMiddleware, async (c) => {
-  const staffs = await db.query.staff.findMany({
+  const staffs = await db.query.staffTable.findMany({
     columns: { password: false },
   });
 
@@ -33,8 +33,8 @@ staffRouter.post(
   async (c) => {
     const payload = c.req.valid("json");
 
-    const existingStaff = await db.query.staff.findMany({
-      where: eq(staff.email, payload.email),
+    const existingStaff = await db.query.staffTable.findMany({
+      where: eq(staffTable.email, payload.email),
     });
 
     if (existingStaff.length > 0) {
@@ -46,7 +46,7 @@ staffRouter.post(
     const hashedPassword = await hashPassword(payload.password);
 
     const [createdStaff] = await db
-      .insert(staff)
+      .insert(staffTable)
       .values({ ...payload, password: hashedPassword })
       .returning();
     const { password: _, ...staffWithOutPassword } = createdStaff;
@@ -92,8 +92,8 @@ staffRouter.post(
 staffRouter.post("/signin", zValidator("json", loginStaffSchema), async (c) => {
   const payload = c.req.valid("json");
 
-  const existingStaff = await db.query.staff.findFirst({
-    where: eq(staff.email, payload.email),
+  const existingStaff = await db.query.staffTable.findFirst({
+    where: eq(staffTable.email, payload.email),
   });
 
   if (!existingStaff) {
@@ -158,8 +158,8 @@ staffRouter.put(
     const { id } = c.req.valid("param");
     const payload = c.req.valid("json");
 
-    const existingStaff = await db.query.staff.findFirst({
-      where: eq(staff.id, id),
+    const existingStaff = await db.query.staffTable.findFirst({
+      where: eq(staffTable.id, id),
     });
 
     if (!existingStaff) {
@@ -169,9 +169,9 @@ staffRouter.put(
     }
 
     const [updatedStaff] = await db
-      .update(staff)
+      .update(staffTable)
       .set(payload)
-      .where(eq(staff.id, id))
+      .where(eq(staffTable.id, id))
       .returning();
 
     const { password: _, ...staffWithoutPassword } = updatedStaff;
@@ -183,8 +183,8 @@ staffRouter.put(
 staffRouter.get("/:id", authMiddleware, validateParamsId, async (c) => {
   const { id } = c.req.valid("param");
 
-  const staffById = await db.query.staff.findFirst({
-    where: eq(staff.id, id),
+  const staffById = await db.query.staffTable.findFirst({
+    where: eq(staffTable.id, id),
     columns: { password: false },
   });
 

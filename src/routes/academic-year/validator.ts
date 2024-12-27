@@ -1,7 +1,7 @@
 import { createInsertSchema } from "drizzle-zod";
-import { academicYears } from "./schema.ts";
+import { academicYearsTable } from "./schema.ts";
 
 export const createAcademicYearSchema =
-  createInsertSchema(academicYears).strict();
+  createInsertSchema(academicYearsTable).strict();
 
 export const updateAcademicYearSchema = createAcademicYearSchema.partial();
