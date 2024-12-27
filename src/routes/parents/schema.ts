@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { organizationsTable } from "../organization/schema.ts";
 import { relations } from "drizzle-orm/relations";
+import { studentsTable } from "../students/schema.ts";
 
 export const parentsTable = pgTable("parents", {
   id: serial("id").primaryKey(),
@@ -21,9 +22,10 @@ export const parentsTable = pgTable("parents", {
   created_at: timestamp().defaultNow().notNull(),
 });
 
-export const parentsRelations = relations(parentsTable, ({ one }) => ({
+export const parentsRelations = relations(parentsTable, ({ one, many }) => ({
   organization: one(organizationsTable, {
     fields: [parentsTable.organization_id],
     references: [organizationsTable.id],
   }),
+  students: many(studentsTable),
 }));

@@ -2,6 +2,7 @@ import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm/relations";
 import { staffTable } from "../staff/schema.ts";
 import { parentsTable } from "../parents/schema.ts";
+import { studentsTable } from "../students/schema.ts";
 
 export const organizationsTable = pgTable("organizations", {
   id: serial("id").primaryKey(),
@@ -18,5 +19,6 @@ export const organizationRelations = relations(
   ({ many }) => ({
     staff: many(staffTable),
     parents: many(parentsTable),
+    students: many(studentsTable),
   })
 );

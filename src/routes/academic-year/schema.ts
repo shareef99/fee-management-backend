@@ -1,4 +1,6 @@
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm/relations";
+import { studentsTable } from "../students/schema.ts";
 
 export const academicYearsTable = pgTable("academic_year", {
   id: serial("id").primaryKey(),
@@ -8,3 +10,10 @@ export const academicYearsTable = pgTable("academic_year", {
   updated_at: timestamp().$onUpdate(() => new Date()),
   created_at: timestamp().defaultNow().notNull(),
 });
+
+export const academicYearsRelations = relations(
+  academicYearsTable,
+  ({ many }) => ({
+    students: many(studentsTable),
+  })
+);

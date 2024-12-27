@@ -7,8 +7,12 @@ import {
 } from "../routes/organization/schema.ts";
 import { staffTable, staffRelations } from "../routes/staff/schema.ts";
 import { parentsTable, parentsRelations } from "../routes/parents/schema.ts";
-import { gradesTable } from "../routes/grades/schema.ts";
-import { academicYearsTable } from "../routes/academic-year/schema.ts";
+import { gradesTable, gradeRelations } from "../routes/grades/schema.ts";
+import {
+  academicYearsTable,
+  academicYearsRelations,
+} from "../routes/academic-year/schema.ts";
+import { studentsRelations, studentsTable } from "../routes/students/schema.ts";
 
 export const db = drizzle({
   connection: env.DATABASE_URL,
@@ -21,6 +25,10 @@ export const db = drizzle({
     parentsTable,
     parentsRelations,
     gradesTable,
+    gradeRelations,
     academicYearsTable,
+    academicYearsRelations,
+    studentsTable,
+    studentsRelations,
   },
 });
