@@ -3,15 +3,17 @@ import app from "../../app.ts";
 import { db } from "../../db/index.ts";
 import { authMiddleware } from "../../middlewares/auth.ts";
 import { createGradeSchema, updateGradeSchema } from "./validator.ts";
-import { grades } from "./schema.ts";
-import { eq } from "drizzle-orm/expressions";
+import { gradesTable } from "./schema.ts";
+import { asc, eq } from "drizzle-orm/expressions";
 import { validateParamsId } from "../../middlewares/validators.ts";
 import { HTTPException } from "hono/http-exception";
 
 export const gradesRouter = app.basePath("/grades");
 
 gradesRouter.get("/", authMiddleware, async (c) => {
-  const grades = await db.query.grades.findMany();
+  const grades = await db.query.gradesTable.findMany({
+    orderBy: [asc(gradesTable.id)],
+  });
 
   return c.json({ grades });
 });
@@ -23,7 +25,7 @@ gradesRouter.post(
   async (c) => {
     const payload = c.req.valid("json");
 
-    const [grade] = await db.insert(grades).values(payload).returning();
+    const [grade] = await db.insert(gradesTable).values(payload).returning();
 
     return c.json({ grade });
   }
@@ -38,8 +40,8 @@ gradesRouter.put(
     const { id } = c.req.valid("param");
     const payload = c.req.valid("json");
 
-    const existingGrade = await db.query.grades.findFirst({
-      where: eq(grades.id, id),
+    const existingGrade = await db.query.gradesTable.findFirst({
+      where: eq(gradesTable.id, id),
     });
 
     if (!existingGrade) {
@@ -49,9 +51,9 @@ gradesRouter.put(
     }
 
     const [grade] = await db
-      .update(grades)
+      .update(gradesTable)
       .set(payload)
-      .where(eq(grades.id, id))
+      .where(eq(gradesTable.id, id))
       .returning();
 
     return c.json({ grade });
@@ -61,8 +63,8 @@ gradesRouter.put(
 gradesRouter.get("/:id", authMiddleware, validateParamsId, async (c) => {
   const { id } = c.req.valid("param");
 
-  const grade = await db.query.grades.findFirst({
-    where: eq(grades.id, id),
+  const grade = await db.query.gradesTable.findFirst({
+    where: eq(gradesTable.id, id),
   });
 
   if (!grade) {

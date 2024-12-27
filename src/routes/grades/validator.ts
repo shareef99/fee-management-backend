@@ -1,6 +1,6 @@
 import { createInsertSchema } from "drizzle-zod";
-import { grades } from "./schema.ts";
+import { gradesTable } from "./schema.ts";
 
-export const createGradeSchema = createInsertSchema(grades).strict();
+export const createGradeSchema = createInsertSchema(gradesTable).strict();
 
 export const updateGradeSchema = createGradeSchema.partial();
