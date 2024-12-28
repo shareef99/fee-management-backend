@@ -8,6 +8,7 @@ import {
 import { organizationsTable } from "../organization/schema.ts";
 import { relations } from "drizzle-orm/relations";
 import { studentsTable } from "../students/schema.ts";
+import { feesTable } from "../fees/schema.ts";
 
 export const parentsTable = pgTable("parents", {
   id: serial("id").primaryKey(),
@@ -28,4 +29,5 @@ export const parentsRelations = relations(parentsTable, ({ one, many }) => ({
     references: [organizationsTable.id],
   }),
   students: many(studentsTable),
+  fees: many(feesTable),
 }));

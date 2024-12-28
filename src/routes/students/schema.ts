@@ -12,6 +12,7 @@ import { gradesTable } from "../grades/schema.ts";
 import { academicYearsTable } from "../academic-year/schema.ts";
 import { genders } from "../../types/enums.ts";
 import { relations } from "drizzle-orm/relations";
+import { feesTable } from "../fees/schema.ts";
 
 export const studentsTable = pgTable("students", {
   id: serial("id").primaryKey(),
@@ -37,7 +38,7 @@ export const studentsTable = pgTable("students", {
   created_at: timestamp().defaultNow().notNull(),
 });
 
-export const studentsRelations = relations(studentsTable, ({ one }) => ({
+export const studentsRelations = relations(studentsTable, ({ one, many }) => ({
   organization: one(organizationsTable, {
     fields: [studentsTable.organization_id],
     references: [organizationsTable.id],
@@ -54,4 +55,5 @@ export const studentsRelations = relations(studentsTable, ({ one }) => ({
     fields: [studentsTable.academic_year_id],
     references: [academicYearsTable.id],
   }),
+  fees: many(feesTable),
 }));

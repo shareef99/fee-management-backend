@@ -13,6 +13,7 @@ import {
   academicYearsRelations,
 } from "../routes/academic-year/schema.ts";
 import { studentsRelations, studentsTable } from "../routes/students/schema.ts";
+import { feesRelations, feesTable } from "../routes/fees/schema.ts";
 
 export const db = drizzle({
   connection: env.DATABASE_URL,
@@ -30,5 +31,7 @@ export const db = drizzle({
     academicYearsRelations,
     studentsTable,
     studentsRelations,
+    feesTable,
+    feesRelations,
   },
 });
