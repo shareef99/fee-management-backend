@@ -8,6 +8,7 @@ import { gradesRouter } from "./routes/grades/index.ts";
 import { academicYearRouter } from "./routes/academic-year/index.ts";
 import { studentsRouter } from "./routes/students/index.ts";
 import { feesRouter } from "./routes/fees/index.ts";
+import { paymentsRouter } from "./routes/payments/index.ts";
 
 const routes = [
   organizationRouter,
@@ -17,6 +18,7 @@ const routes = [
   academicYearRouter,
   studentsRouter,
   feesRouter,
+  paymentsRouter,
 ];
 routes.forEach((route) => app.route("/", route));
 

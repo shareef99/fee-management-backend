@@ -4,6 +4,7 @@ import { parentsTable } from "../parents/schema.ts";
 import { gradesTable } from "../grades/schema.ts";
 import { academicYearsTable } from "../academic-year/schema.ts";
 import { relations } from "drizzle-orm/relations";
+import { paymentsTable } from "../payments/schema.ts";
 
 export const feesTable = pgTable("fees", {
   id: serial("id").primaryKey(),
@@ -25,7 +26,7 @@ export const feesTable = pgTable("fees", {
   paid: doublePrecision("paid").notNull().default(0),
 });
 
-export const feesRelations = relations(feesTable, ({ one }) => ({
+export const feesRelations = relations(feesTable, ({ one, many }) => ({
   student: one(studentsTable, {
     fields: [feesTable.student_id],
     references: [studentsTable.id],
@@ -42,4 +43,5 @@ export const feesRelations = relations(feesTable, ({ one }) => ({
     fields: [feesTable.academic_year_id],
     references: [academicYearsTable.id],
   }),
+  payments: many(paymentsTable),
 }));

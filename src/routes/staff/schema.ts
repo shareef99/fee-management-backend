@@ -8,6 +8,7 @@ import {
 import { organizationsTable } from "../organization/schema.ts";
 import { staffRoles } from "../../types/enums.ts";
 import { relations } from "drizzle-orm/relations";
+import { paymentsTable } from "../payments/schema.ts";
 
 export const staffTable = pgTable("staff", {
   id: serial("id").primaryKey(),
@@ -23,9 +24,10 @@ export const staffTable = pgTable("staff", {
   created_at: timestamp().defaultNow().notNull(),
 });
 
-export const staffRelations = relations(staffTable, ({ one }) => ({
+export const staffRelations = relations(staffTable, ({ one, many }) => ({
   organization: one(organizationsTable, {
     fields: [staffTable.organization_id],
     references: [organizationsTable.id],
   }),
+  payments: many(paymentsTable),
 }));

@@ -30,4 +30,5 @@ export const parentsRelations = relations(parentsTable, ({ one, many }) => ({
   }),
   students: many(studentsTable),
   fees: many(feesTable),
+  payments: many(feesTable),
 }));

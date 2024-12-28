@@ -57,6 +57,13 @@
       "when": 1735384533794,
       "tag": "0007_mighty_spacker_dave",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1735401324782,
+      "tag": "0008_free_mephistopheles",
+      "breakpoints": true
     }
   ]
 }
