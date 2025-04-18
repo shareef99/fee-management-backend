@@ -64,6 +64,13 @@
       "when": 1735401324782,
       "tag": "0008_free_mephistopheles",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1744961668745,
+      "tag": "0009_faulty_george_stacy",
+      "breakpoints": true
     }
   ]
 }

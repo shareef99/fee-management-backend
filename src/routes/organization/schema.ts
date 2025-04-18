@@ -1,4 +1,10 @@
-import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  pgTable,
+  serial,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm/relations";
 import { staffTable } from "../staff/schema.ts";
 import { parentsTable } from "../parents/schema.ts";
@@ -10,6 +16,7 @@ export const organizationsTable = pgTable("organizations", {
   email: varchar("email", { length: 255 }).unique().notNull(),
   address: varchar("address", { length: 255 }).notNull(),
   mobile: varchar("mobile", { length: 15 }).notNull(),
+  is_active: boolean("is_active").default(true).notNull(),
   updated_at: timestamp().$onUpdate(() => new Date()),
   created_at: timestamp().defaultNow().notNull(),
 });
