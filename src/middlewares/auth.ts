@@ -1,23 +1,25 @@
-import { bearerAuth } from "hono/bearer-auth";
 import { getSignedCookie } from "hono/cookie";
 import env from "../env.ts";
 import { cookieKeys } from "../constants/index.ts";
+import { MiddlewareHandler } from "hono/types";
+import { HTTPException } from "hono/http-exception";
+import { verify } from "hono/jwt";
 
-export const authMiddleware = bearerAuth({
-  noAuthenticationHeaderMessage: "Please provide a token",
-  invalidAuthenticationHeaderMessage: "Invalid header provided",
-  invalidTokenMessage: "Invalid token provided",
-  async verifyToken(token, c) {
-    if (!token) {
-      return false;
-    }
+export const authMiddleware: MiddlewareHandler = async (c, next) => {
+  const token = await getSignedCookie(
+    c,
+    env.SECRET_KEY,
+    cookieKeys.accessToken
+  );
 
-    const accessToken = await getSignedCookie(
-      c,
-      env.SECRET_KEY,
-      cookieKeys.accessToken
-    );
+  if (!token) {
+    throw new HTTPException(401, { message: "No token found in cookies" });
+  }
 
-    return token === accessToken;
-  },
-});
+  try {
+    await verify(token, env.SECRET_KEY);
+    await next();
+  } catch (_error) {
+    throw new HTTPException(401, { message: "Invalid token" });
+  }
+};

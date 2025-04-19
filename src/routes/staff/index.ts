@@ -9,8 +9,8 @@ import {
 import { eq } from "drizzle-orm";
 import { staffTable } from "./schema.ts";
 import { HTTPException } from "hono/http-exception";
-import { sign } from "hono/jwt";
-import { setSignedCookie } from "hono/cookie";
+import { decode, sign, verify } from "hono/jwt";
+import { getSignedCookie, setSignedCookie } from "hono/cookie";
 import { hashPassword, verifyPassword } from "../../helpers/index.ts";
 import env from "../../env.ts";
 import { cookieKeys } from "../../constants/index.ts";
@@ -115,8 +115,11 @@ staffRouter.post("/signin", zValidator("json", loginStaffSchema), async (c) => {
 
   const tokenPayload = {
     id: existingStaff.id,
+    organization_id: existingStaff.organization_id,
     name: existingStaff.name,
     email: existingStaff.email,
+    role: existingStaff.role,
+    mobile: existingStaff.mobile,
   };
   const accessToken = await sign(tokenPayload, env.SECRET_KEY);
   const refreshToken = await sign(tokenPayload, env.REFRESH_SECRET_KEY);
@@ -195,4 +198,81 @@ staffRouter.get("/:id", authMiddleware, validateParamsId, async (c) => {
   }
 
   return c.json({ staff: staffById });
+});
+
+staffRouter.post("/refresh", async (c) => {
+  const refreshToken = await getSignedCookie(
+    c,
+    env.REFRESH_SECRET_KEY,
+    cookieKeys.refreshToken
+  );
+
+  if (!refreshToken) {
+    throw new HTTPException(400, {
+      message: "Unauthorized refresh token not found",
+    });
+  }
+
+  try {
+    await verify(refreshToken, env.REFRESH_SECRET_KEY);
+  } catch (_error) {
+    throw new HTTPException(400, {
+      message: "Unauthorized refresh token",
+    });
+  }
+
+  const decoded = decode(refreshToken);
+
+  const staffId = decoded.payload.id as number;
+
+  const staff = await db.query.staffTable.findFirst({
+    where: eq(staffTable.id, staffId),
+    columns: { password: false },
+  });
+
+  if (!staff) {
+    throw new HTTPException(400, {
+      message: "Unauthorized invalid staff id",
+    });
+  }
+
+  const tokenPayload = {
+    id: staff.id,
+    organization_id: staff.organization_id,
+    name: staff.name,
+    email: staff.email,
+    role: staff.role,
+    mobile: staff.mobile,
+  };
+  const newAccessToken = await sign(tokenPayload, env.SECRET_KEY);
+  const newRefreshToken = await sign(tokenPayload, env.REFRESH_SECRET_KEY);
+
+  await setSignedCookie(
+    c,
+    cookieKeys.accessToken,
+    newAccessToken,
+    env.SECRET_KEY,
+    {
+      httpOnly: true,
+      expires: new Date(Date.now() + env.TOKEN_EXPIRATION_MINUTES * 60 * 1000),
+    }
+  );
+
+  await setSignedCookie(
+    c,
+    cookieKeys.refreshToken,
+    newRefreshToken,
+    env.REFRESH_SECRET_KEY,
+    {
+      httpOnly: true,
+      expires: new Date(
+        Date.now() + env.TOKEN_EXPIRATION_MINUTES * 60 * 1000 * 24
+      ),
+    }
+  );
+
+  return c.json({
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+  });
 });

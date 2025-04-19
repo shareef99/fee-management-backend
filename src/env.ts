@@ -9,6 +9,7 @@ const EnvSchema = z.object({
   SECRET_KEY: z.string(),
   REFRESH_SECRET_KEY: z.string(),
   TOKEN_EXPIRATION_MINUTES: z.coerce.number().default(60),
+  FRONTEND_URL: z.string().default("http://localhost:3100"),
 });
 type Env = z.infer<typeof EnvSchema>;
 
