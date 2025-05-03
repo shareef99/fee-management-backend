@@ -1,0 +1,1 @@
+ALTER TABLE "grades" ALTER COLUMN "organization_id" SET NOT NULL;

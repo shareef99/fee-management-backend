@@ -1,0 +1,1 @@
+ALTER TABLE "academic_year" ALTER COLUMN "organization_id" SET NOT NULL;

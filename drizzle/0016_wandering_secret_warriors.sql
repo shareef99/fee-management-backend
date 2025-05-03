@@ -1,0 +1,1 @@
+ALTER TABLE "academic_year" ADD COLUMN "is_current_year" boolean DEFAULT false NOT NULL;
