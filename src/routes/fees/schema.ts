@@ -1,4 +1,10 @@
-import { doublePrecision, integer, pgTable, serial } from "drizzle-orm/pg-core";
+import {
+  doublePrecision,
+  integer,
+  pgTable,
+  serial,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { studentsTable } from "../students/schema.ts";
 import { parentsTable } from "../parents/schema.ts";
 import { gradesTable } from "../grades/schema.ts";
@@ -24,6 +30,8 @@ export const feesTable = pgTable("fees", {
   discount: doublePrecision("discount").notNull().default(0),
   due_amount: doublePrecision("due_amount").notNull(),
   paid: doublePrecision("paid").notNull().default(0),
+  updated_at: timestamp().$onUpdate(() => new Date()),
+  created_at: timestamp().defaultNow().notNull(),
 });
 
 export const feesRelations = relations(feesTable, ({ one, many }) => ({

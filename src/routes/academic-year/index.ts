@@ -8,13 +8,15 @@ import {
   updateAcademicYearSchema,
 } from "./validator.ts";
 import { validateParamsId } from "../../middlewares/validators.ts";
-import { eq } from "drizzle-orm/expressions";
+import { desc, eq } from "drizzle-orm/expressions";
 import { HTTPException } from "hono/http-exception";
 
 export const academicYearRouter = app.basePath("/academic-years");
 
 academicYearRouter.get("/", authMiddleware, async (c) => {
-  const academicYears = await db.query.academicYearsTable.findMany();
+  const academicYears = await db.query.academicYearsTable.findMany({
+    orderBy: [desc(academicYearsTable.end_date)],
+  });
 
   return c.json({ academic_years: academicYears });
 });

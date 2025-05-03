@@ -34,6 +34,15 @@ parentsRouter.get("/:id", authMiddleware, validateParamsId, async (c) => {
 
   const parent = await db.query.parentsTable.findFirst({
     where: eq(parentsTable.id, id),
+    with: {
+      students: {
+        with: {
+          grade: true,
+          academic_year: true,
+          fees: true,
+        },
+      },
+    },
   });
 
   if (!parent) {

@@ -9,6 +9,7 @@ import {
 } from "./validator.ts";
 import { validateParamsId } from "../../middlewares/validators.ts";
 import { HTTPException } from "hono/http-exception";
+import { staffTable } from "../staff/schema.ts";
 
 export const organizationRouter = app.basePath("/organizations");
 
@@ -23,7 +24,19 @@ organizationRouter.post(
       .values(payload)
       .returning();
 
-    return c.json({ organization });
+    const [staff] = await db
+      .insert(staffTable)
+      .values({
+        organization_id: organization.id,
+        name: "Admin",
+        email: payload.email,
+        mobile: payload.mobile,
+        password: payload.mobile,
+        role: "admin",
+      })
+      .returning();
+
+    return c.json({ organization, staff });
   }
 );
 

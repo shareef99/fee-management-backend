@@ -16,6 +16,7 @@ import env from "../../env.ts";
 import { cookieKeys } from "../../constants/index.ts";
 import { validateParamsId } from "../../middlewares/validators.ts";
 import { authMiddleware } from "../../middlewares/auth.ts";
+import { TokenPayload } from "../../types/app.ts";
 
 export const staffRouter = app.basePath("/staff");
 
@@ -51,10 +52,13 @@ staffRouter.post(
       .returning();
     const { password: _, ...staffWithOutPassword } = createdStaff;
 
-    const tokenPayload = {
+    const tokenPayload: TokenPayload = {
       id: createdStaff.id,
+      organization_id: createdStaff.organization_id,
       name: payload.name,
       email: payload.email,
+      role: createdStaff.role,
+      mobile: createdStaff.mobile,
     };
     const accessToken = await sign(tokenPayload, env.SECRET_KEY);
     const refreshToken = await sign(tokenPayload, env.REFRESH_SECRET_KEY);
@@ -113,7 +117,7 @@ staffRouter.post("/signin", zValidator("json", loginStaffSchema), async (c) => {
     });
   }
 
-  const tokenPayload = {
+  const tokenPayload: TokenPayload = {
     id: existingStaff.id,
     organization_id: existingStaff.organization_id,
     name: existingStaff.name,
@@ -147,6 +151,10 @@ staffRouter.post("/signin", zValidator("json", loginStaffSchema), async (c) => {
       ),
     }
   );
+
+  c.set("organization_id", existingStaff.organization_id);
+  c.set("staff_id", existingStaff.id);
+  c.set("role", existingStaff.role);
 
   const { password: _, ...staffWithoutPassword } = existingStaff;
   return c.json({ staff: staffWithoutPassword, accessToken, refreshToken });
@@ -276,3 +284,32 @@ staffRouter.post("/refresh", async (c) => {
     refreshToken: newRefreshToken,
   });
 });
+
+staffRouter.post(
+  "/",
+  authMiddleware,
+  zValidator("json", createStaffSchema),
+  async (c) => {
+    const payload = c.req.valid("json");
+
+    const existingStaff = await db.query.staffTable.findMany({
+      where: eq(staffTable.email, payload.email),
+    });
+
+    if (existingStaff.length > 0) {
+      throw new HTTPException(400, {
+        message: "Staff already exists with this email",
+      });
+    }
+
+    const hashedPassword = await hashPassword(payload.password);
+
+    const [createdStaff] = await db
+      .insert(staffTable)
+      .values({ ...payload, password: hashedPassword })
+      .returning();
+    const { password: _, ...staffWithOutPassword } = createdStaff;
+
+    return c.json({ staff: staffWithOutPassword });
+  }
+);
